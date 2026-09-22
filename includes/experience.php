@@ -3,6 +3,7 @@
  * Experience Section Component
  * Mohit Rathod Portfolio
  */
+global $portfolio;
 ?>
 <section class="section experience-section" id="experience">
     <div class="container">

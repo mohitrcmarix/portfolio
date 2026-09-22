@@ -3,6 +3,7 @@
  * Hero Section Component
  * Mohit Rathod Portfolio
  */
+global $portfolio;
 ?>
 <section class="hero-section" id="hero">
     <div class="container hero-container">

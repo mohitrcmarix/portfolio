@@ -3,6 +3,7 @@
  * About Section Component
  * Mohit Rathod Portfolio
  */
+global $portfolio;
 ?>
 <section class="section about-section" id="about">
     <div class="container">

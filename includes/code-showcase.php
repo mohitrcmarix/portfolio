@@ -3,6 +3,7 @@
  * Code Showcase Component
  * Mohit Rathod Portfolio
  */
+global $portfolio;
 ?>
 <section class="section code-section" id="code-showcase">
     <div class="container">

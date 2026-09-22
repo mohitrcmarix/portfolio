@@ -3,6 +3,7 @@
  * Footer Component
  * Mohit Rathod Portfolio
  */
+global $portfolio;
 ?>
 <footer class="site-footer">
     <div class="container footer-container">

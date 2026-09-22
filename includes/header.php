@@ -3,6 +3,7 @@
  * Header Component
  * Mohit Rathod Portfolio
  */
+global $portfolio;
 ?>
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
