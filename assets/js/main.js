@@ -83,6 +83,7 @@ $(document).ready(function () {
             $backToTop.removeClass('visible');
         }
 
+        
         // Scrollspy active state
         sections.each(function () {
             const top = $(this).offset().top - 120;
