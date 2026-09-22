@@ -16,7 +16,7 @@
         <!-- Desktop Navigation -->
         <nav class="nav-menu" id="nav-menu" aria-label="Main Navigation">
             <ul class="nav-list">
-                <li class="nav-item"><a href="#hero" class="nav-link active" id="nav-hero-link"><i class="fa-solid fa-house-chimney"></i> Home</a></li>
+                <li class="nav-item"><a href="./" class="nav-link active" id="nav-hero-link"><i class="fa-solid fa-house-chimney"></i> Home</a></li>
                 <li class="nav-item"><a href="#about" class="nav-link" id="nav-about-link"><i class="fa-solid fa-user-tie"></i> About</a></li>
                 <li class="nav-item"><a href="#skills" class="nav-link" id="nav-skills-link"><i class="fa-solid fa-laptop-code"></i> Skills</a></li>
                 <li class="nav-item"><a href="#experience" class="nav-link" id="nav-exp-link"><i class="fa-solid fa-briefcase"></i> Experience</a></li>

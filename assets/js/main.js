@@ -91,7 +91,11 @@ $(document).ready(function () {
 
             if (scrollPos >= top && scrollPos < bottom) {
                 $('.nav-link').removeClass('active');
-                $(`.nav-link[href="#${id}"]`).addClass('active');
+                if (id === 'hero') {
+                    $('#nav-hero-link').addClass('active');
+                } else {
+                    $(`.nav-link[href="#${id}"]`).addClass('active');
+                }
             }
         });
     });
@@ -105,6 +109,14 @@ $(document).ready(function () {
         e.preventDefault();
         $('html, body').animate({ scrollTop: 0 }, 500);
         // Remove any hash from URL cleanly
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.pathname);
+        }
+    });
+
+    $('#nav-hero-link').on('click', function (e) {
+        e.preventDefault();
+        $('html, body').stop(true, true).scrollTop(0);
         if (window.history && window.history.replaceState) {
             window.history.replaceState(null, null, window.location.pathname);
         }

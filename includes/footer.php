@@ -9,7 +9,7 @@ global $portfolio;
     <div class="container footer-container">
         <div class="footer-top">
             <div class="footer-brand-col">
-                <a href="#hero" class="brand-logo" aria-label="Mohit Rathod Homepage">
+                <a href="./" class="brand-logo" aria-label="Mohit Rathod Homepage">
                     <span class="logo-symbol">&lt;</span>
                     <span class="logo-text">Mohit</span>
                     <span class="logo-accent">.Rathod</span>
@@ -37,7 +37,7 @@ global $portfolio;
             <div class="footer-links-col">
                 <h4>Quick Navigation</h4>
                 <ul class="footer-nav">
-                    <li><a href="#hero"><i class="fa-solid fa-chevron-right"></i> Home</a></li>
+                    <li><a href="./"><i class="fa-solid fa-chevron-right"></i> Home</a></li>
                     <li><a href="#about"><i class="fa-solid fa-chevron-right"></i> About Me</a></li>
                     <li><a href="#skills"><i class="fa-solid fa-chevron-right"></i> Technical Skills</a></li>
                     <li><a href="#experience"><i class="fa-solid fa-chevron-right"></i> Experience</a></li>
