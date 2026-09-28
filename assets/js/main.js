@@ -65,39 +65,45 @@ $(document).ready(function () {
     const $header = $('#header');
     const $backToTop = $('#back-to-top');
     const sections = $('section[id]');
+    let scrollUpdatePending = false;
 
     $(window).on('scroll', function () {
-        const scrollPos = $(this).scrollTop();
+        if (scrollUpdatePending) return;
+        scrollUpdatePending = true;
 
-        // Sticky Header shadow
-        if (scrollPos > 40) {
-            $header.css('box-shadow', '0 8px 24px rgba(0, 0, 0, 0.2)');
-        } else {
-            $header.css('box-shadow', 'none');
-        }
+        window.requestAnimationFrame(function () {
+            scrollUpdatePending = false;
+            const scrollPos = window.scrollY;
 
-        // Back to top button visibility
-        if (scrollPos > 350) {
-            $backToTop.addClass('visible');
-        } else {
-            $backToTop.removeClass('visible');
-        }
-
-        
-        // Scrollspy active state
-        sections.each(function () {
-            const top = $(this).offset().top - 120;
-            const bottom = top + $(this).outerHeight();
-            const id = $(this).attr('id');
-
-            if (scrollPos >= top && scrollPos < bottom) {
-                $('.nav-link').removeClass('active');
-                if (id === 'hero') {
-                    $('#nav-hero-link').addClass('active');
-                } else {
-                    $(`.nav-link[href="#${id}"]`).addClass('active');
-                }
+            // Sticky Header shadow
+            if (scrollPos > 40) {
+                $header.css('box-shadow', '0 8px 24px rgba(0, 0, 0, 0.2)');
+            } else {
+                $header.css('box-shadow', 'none');
             }
+
+            // Back to top button visibility
+            if (scrollPos > 350) {
+                $backToTop.addClass('visible');
+            } else {
+                $backToTop.removeClass('visible');
+            }
+
+            // Scrollspy active state
+            sections.each(function () {
+                const top = $(this).offset().top - 120;
+                const bottom = top + $(this).outerHeight();
+                const id = $(this).attr('id');
+
+                if (scrollPos >= top && scrollPos < bottom) {
+                    $('.nav-link').removeClass('active');
+                    if (id === 'hero') {
+                        $('#nav-hero-link').addClass('active');
+                    } else {
+                        $(`.nav-link[href="#${id}"]`).addClass('active');
+                    }
+                }
+            });
         });
     });
 

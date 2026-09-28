@@ -119,6 +119,21 @@ a {
     transition: color var(--transition-fast);
 }
 
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    z-index: 4000;
+    padding: 10px 14px;
+    background: var(--primary);
+    color: var(--text-inverse);
+    border-radius: var(--radius-sm);
+}
+
+.skip-link:focus {
+    top: 12px;
+}
+
 button {
     font-family: inherit;
     cursor: pointer;
@@ -206,7 +221,8 @@ img, svg {
 
 .gradient-text {
     background: linear-gradient(135deg, var(--primary) 0%, #38bdf8 50%, var(--accent-indigo) 100%);
-    -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
 }
@@ -528,9 +544,13 @@ img, svg {
 
 .hero-container {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     gap: 56px;
     align-items: center;
+}
+
+.hero-container > * {
+    min-width: 0;
 }
 
 .hero-badge {
@@ -1111,7 +1131,7 @@ img, svg {
     flex-shrink: 0;
 }
 
-.skill-compact-header h4 {
+.skill-compact-header h3 {
     font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -1728,6 +1748,7 @@ img, svg {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    min-width: 0;
 }
 
 .method-title {
@@ -1740,6 +1761,7 @@ img, svg {
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-primary);
+    overflow-wrap: anywhere;
 }
 
 /* Contact Form */
@@ -2333,8 +2355,13 @@ img, svg {
    ========================================================================== */
 @media (max-width: 1024px) {
     .hero-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 48px;
+    }
+
+    .hero-container > .hero-content,
+    .hero-container > .hero-visual {
+        min-width: 0;
     }
 
     .hero-title {
@@ -2415,7 +2442,11 @@ img, svg {
     }
 
     .about-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .about-grid > * {
+        min-width: 0;
     }
 
     .skills-compact-grid {
@@ -2431,7 +2462,11 @@ img, svg {
     }
 
     .contact-layout-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .contact-layout-grid > * {
+        min-width: 0;
     }
 
     .form-grid {
