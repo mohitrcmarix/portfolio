@@ -1846,19 +1846,6 @@ img, svg {
     font-size: 1rem;
 }
 
-.spinner-border-sm {
-    width: 18px;
-    height: 18px;
-    border: 2px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spinner-rotate 0.75s linear infinite;
-}
-
-@keyframes spinner-rotate {
-    to { transform: rotate(360deg); }
-}
-
 /* ==========================================================================
    Modals
    ========================================================================== */

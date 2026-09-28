@@ -1,22 +1,15 @@
-<?php
-/**
- * Hero Section Component
- * Mohit Rathod Portfolio
- */
-global $portfolio;
-?>
 <section class="hero-section" id="hero">
     <div class="container hero-container">
         <div class="hero-content">
             <!-- Availability Badge -->
             <div class="hero-badge">
                 <span class="status-pulse"></span>
-                <span class="badge-text"><?= htmlspecialchars($portfolio['personal']['availability']) ?></span>
+                <span class="badge-text">Available for Full-time &amp; High-Impact Projects</span>
             </div>
 
             <!-- Main Heading -->
             <h1 class="hero-title">
-                Hi, I'm <span class="gradient-text hero-name"><?= htmlspecialchars($portfolio['personal']['name']) ?></span>
+                Hi, I'm <span class="gradient-text hero-name">Mohit Rathod</span>
                 <span class="hero-role-wrapper">
                     <span class="hero-static-prefix">Crafting</span>
                     <span class="typed-text-target" id="typed-text"></span><span class="cursor-blink">|</span>
@@ -30,17 +23,17 @@ global $portfolio;
 
             <!-- Quick Direct Contact Chips -->
             <div class="hero-chips">
-                <a href="mailto:<?= htmlspecialchars($portfolio['personal']['email']) ?>" class="contact-chip" title="Send email">
+                <a href="mailto:rathodmohit149@gmail.com" class="contact-chip" title="Send email">
                     <i class="fa-solid fa-envelope"></i>
-                    <span><?= htmlspecialchars($portfolio['personal']['email']) ?></span>
+                    <span>rathodmohit149@gmail.com</span>
                 </a>
-                <a href="tel:<?= htmlspecialchars($portfolio['personal']['phone_raw']) ?>" class="contact-chip" title="Call directly">
+                <a href="tel:+919724696274" class="contact-chip" title="Call directly">
                     <i class="fa-solid fa-phone"></i>
-                    <span><?= htmlspecialchars($portfolio['personal']['phone']) ?></span>
+                    <span>+91 9724696274</span>
                 </a>
                 <span class="contact-chip location-chip">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span><?= htmlspecialchars($portfolio['personal']['location']) ?></span>
+                    <span>Ahmedabad, Gujarat, India</span>
                 </span>
             </div>
 
@@ -54,7 +47,7 @@ global $portfolio;
                     <i class="fa-solid fa-paper-plane"></i>
                     <span>Let's Discuss Work</span>
                 </a>
-                <a href="<?= htmlspecialchars($portfolio['personal']['whatsapp']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg" id="hero-cta-whatsapp" title="Chat on WhatsApp">
+                <a href="https://wa.me/919724696274?text=Hi%20Mohit,%20I%20viewed%20your%20portfolio%20and%20would%20like%20to%20connect!" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg" id="hero-cta-whatsapp" title="Chat on WhatsApp">
                     <i class="fa-brands fa-whatsapp"></i>
                     <span>WhatsApp</span>
                 </a>
@@ -63,13 +56,13 @@ global $portfolio;
             <!-- Social Connect Links -->
             <div class="hero-socials">
                 <span class="social-label">Connect:</span>
-                <a href="<?= htmlspecialchars($portfolio['personal']['linkedin']) ?>" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn Profile" aria-label="Mohit Rathod LinkedIn">
+                <a href="https://www.linkedin.com/in/mohit-rathod-b23638321" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn Profile" aria-label="Mohit Rathod LinkedIn">
                     <i class="fa-brands fa-linkedin-in"></i>
                 </a>
-                <a href="mailto:<?= htmlspecialchars($portfolio['personal']['email']) ?>" class="social-link" title="Direct Email" aria-label="Email Mohit Rathod">
+                <a href="mailto:rathodmohit149@gmail.com" class="social-link" title="Direct Email" aria-label="Email Mohit Rathod">
                     <i class="fa-solid fa-at"></i>
                 </a>
-                <a href="tel:<?= htmlspecialchars($portfolio['personal']['phone_raw']) ?>" class="social-link" title="Direct Phone" aria-label="Call Mohit">
+                <a href="tel:+919724696274" class="social-link" title="Direct Phone" aria-label="Call Mohit">
                     <i class="fa-solid fa-phone-volume"></i>
                 </a>
             </div>
@@ -139,18 +132,43 @@ global $portfolio;
 
             <!-- Mini Experience Highlights -->
             <div class="hero-stats-banner">
-                <?php foreach ($portfolio['stats'] as $index => $stat): ?>
-                    <div class="stat-item" id="hero-stat-<?= $index ?>">
+                                    <div class="stat-item" id="hero-stat-0">
                         <div class="stat-icon-wrap">
-                            <i class="<?= htmlspecialchars($stat['icon']) ?>"></i>
+                            <i class="fa-solid fa-calendar-check"></i>
                         </div>
                         <div class="stat-info">
-                            <span class="stat-number"><?= htmlspecialchars($stat['number']) ?></span>
-                            <span class="stat-label"><?= htmlspecialchars($stat['label']) ?></span>
+                            <span class="stat-number">1+</span>
+                            <span class="stat-label">Years Hands-on Experience</span>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                                    <div class="stat-item" id="hero-stat-1">
+                        <div class="stat-icon-wrap">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Websites &amp; Projects Handled</span>
+                        </div>
+                    </div>
+                                    <div class="stat-item" id="hero-stat-2">
+                        <div class="stat-icon-wrap">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">90+</span>
+                            <span class="stat-label">Google PageSpeed Targets</span>
+                        </div>
+                    </div>
+                                    <div class="stat-item" id="hero-stat-3">
+                        <div class="stat-icon-wrap">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Dedication &amp; Client Satisfaction</span>
+                        </div>
+                    </div>
+                            </div>
         </div>
     </div>
 </section>

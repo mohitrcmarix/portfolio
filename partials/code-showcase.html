@@ -1,0 +1,182 @@
+<section class="section code-section" id="code-showcase">
+    <div class="container">
+        <div class="section-header text-center">
+            <span class="section-tag"><i class="fa-solid fa-code"></i> Engineering Standards</span>
+            <h2 class="section-title">Developer <span class="gradient-text">Code Lab</span></h2>
+            <p class="section-subtitle">Real-world patterns demonstrating clean WordPress hooks, secure PHP OOP, and AJAX architecture.</p>
+        </div>
+
+        <div class="code-terminal-card glass-panel">
+            <!-- Code Tab Bar -->
+            <div class="code-terminal-header">
+                <div class="terminal-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                
+                <div class="code-tabs-nav" id="code-tabs-nav">
+                                            <button type="button" class="code-tab-btn active" data-target="code-php-ajax">
+                            <i class="fa-brands fa-php tab-icon"></i>
+                            <span>Custom WordPress AJAX Handler &amp; Nonce Check</span>
+                        </button>
+                                            <button type="button" class="code-tab-btn " data-target="code-razorpay-woo">
+                            <i class="fa-brands fa-php tab-icon"></i>
+                            <span>WooCommerce Custom Fee &amp; Razorpay Hook</span>
+                        </button>
+                                            <button type="button" class="code-tab-btn " data-target="code-core-php-crud">
+                            <i class="fa-brands fa-php tab-icon"></i>
+                            <span>Core PHP OOP Database Manager (PDO &amp; Prepared Statements)</span>
+                        </button>
+                                    </div>
+
+                <button type="button" class="btn-copy-code" id="btn-copy-active-code" title="Copy code snippet">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copy Code</span>
+                </button>
+            </div>
+
+            <!-- Code Panels -->
+            <div class="code-terminal-body">
+                                    <div class="code-snippet-panel active" id="code-php-ajax">
+                        <div class="snippet-meta-bar">
+                            <span class="meta-lang"><i class="fa-brands fa-php"></i> PHP 8.x / WordPress 6.x</span>
+                            <span class="meta-verified"><i class="fa-solid fa-shield-check"></i> Nonce &amp; Type-Safe</span>
+                        </div>
+                        <pre><code class="language-php code-text-content">&lt;?php
+/**
+ * Secure WordPress AJAX Endpoint for Dynamic Filtering
+ * Developed by Mohit Rathod
+ */
+add_action(&#039;wp_ajax_filter_portfolio_projects&#039;, &#039;mohit_filter_portfolio_projects&#039;);
+add_action(&#039;wp_ajax_nopriv_filter_portfolio_projects&#039;, &#039;mohit_filter_portfolio_projects&#039;);
+
+function mohit_filter_portfolio_projects() {
+    // Verify Security Nonce
+    check_ajax_referer(&#039;mohit_portfolio_nonce&#039;, &#039;security&#039;);
+
+    $category = isset($_POST[&#039;category&#039;]) ? sanitize_text_field($_POST[&#039;category&#039;]) : &#039;all&#039;;
+    
+    $args = [
+        &#039;post_type&#039;      =&gt; &#039;portfolio_project&#039;,
+        &#039;posts_per_page&#039; =&gt; 9,
+        &#039;post_status&#039;    =&gt; &#039;publish&#039;,
+    ];
+
+    if ($category !== &#039;all&#039;) {
+        $args[&#039;tax_query&#039;] = [
+            [
+                &#039;taxonomy&#039; =&gt; &#039;project_category&#039;,
+                &#039;field&#039;    =&gt; &#039;slug&#039;,
+                &#039;terms&#039;    =&gt; $category,
+            ]
+        ];
+    }
+
+    $query = new WP_Query($args);
+    $projects = [];
+
+    if ($query-&gt;have_posts()) {
+        while ($query-&gt;have_posts()) {
+            $query-&gt;the_post();
+            $projects[] = [
+                &#039;id&#039;       =&gt; get_the_ID(),
+                &#039;title&#039;    =&gt; get_the_title(),
+                &#039;excerpt&#039;  =&gt; get_the_excerpt(),
+                &#039;live_url&#039; =&gt; get_field(&#039;live_website_url&#039;),
+                &#039;stack&#039;    =&gt; get_field(&#039;tech_stack_tags&#039;),
+                &#039;thumb&#039;    =&gt; get_the_post_thumbnail_url(get_the_ID(), &#039;medium_large&#039;),
+            ];
+        }
+        wp_reset_postdata();
+        wp_send_json_success([&#039;projects&#039; =&gt; $projects]);
+    } else {
+        wp_send_json_error([&#039;message&#039; =&gt; &#039;No projects found in this category.&#039;]);
+    }
+}</code></pre>
+                    </div>
+                                    <div class="code-snippet-panel " id="code-razorpay-woo">
+                        <div class="snippet-meta-bar">
+                            <span class="meta-lang"><i class="fa-brands fa-php"></i> PHP 8.x / WordPress 6.x</span>
+                            <span class="meta-verified"><i class="fa-solid fa-shield-check"></i> Nonce &amp; Type-Safe</span>
+                        </div>
+                        <pre><code class="language-php code-text-content">&lt;?php
+/**
+ * WooCommerce Custom Dynamic Checkout Logic
+ * Developed by Mohit Rathod
+ */
+add_action(&#039;woocommerce_cart_calculate_fees&#039;, &#039;mohit_custom_express_handling_fee&#039;);
+function mohit_custom_express_handling_fee($cart) {
+    if (is_admin() &amp;&amp; !defined(&#039;DOING_AJAX&#039;)) {
+        return;
+    }
+
+    // Check custom customer session flag
+    $is_express = WC()-&gt;session-&gt;get(&#039;mohit_express_delivery&#039;);
+    if ($is_express) {
+        $fee_amount = 150.00; // INR express packaging
+        $cart-&gt;add_fee(__(&#039;Express Priority Handling&#039;, &#039;mohit-theme&#039;), $fee_amount, true, &#039;standard&#039;);
+    }
+}
+
+// Razorpay Custom Payment Verification Hook
+add_action(&#039;woocommerce_payment_complete&#039;, &#039;mohit_verify_razorpay_order_status&#039;);
+function mohit_verify_razorpay_order_status($order_id) {
+    $order = wc_get_order($order_id);
+    if (!$order) return;
+
+    if ($order-&gt;get_payment_method() === &#039;razorpay&#039;) {
+        $razorpay_payment_id = $order-&gt;get_meta(&#039;_razorpay_payment_id&#039;);
+        if (!empty($razorpay_payment_id)) {
+            $order-&gt;add_order_note(
+                sprintf(__(&#039;Payment verified via Razorpay ID: %s. Order moved to processing.&#039;, &#039;mohit-theme&#039;), $razorpay_payment_id)
+            );
+        }
+    }
+}</code></pre>
+                    </div>
+                                    <div class="code-snippet-panel " id="code-core-php-crud">
+                        <div class="snippet-meta-bar">
+                            <span class="meta-lang"><i class="fa-brands fa-php"></i> PHP 8.x / WordPress 6.x</span>
+                            <span class="meta-verified"><i class="fa-solid fa-shield-check"></i> Nonce &amp; Type-Safe</span>
+                        </div>
+                        <pre><code class="language-php code-text-content">&lt;?php
+/**
+ * Core PHP OOP Database CRUD Class
+ * Developed by Mohit Rathod
+ */
+class DatabaseManager {
+    private PDO $pdo;
+
+    public function __construct(string $host, string $db, string $user, string $pass) {
+        $dsn = &quot;mysql:host={$host};dbname={$db};charset=utf8mb4&quot;;
+        $options = [
+            PDO::ATTR_ERRMODE            =&gt; PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   =&gt; false,
+        ];
+        $this-&gt;pdo = new PDO($dsn, $user, $pass, $options);
+    }
+
+    public function insert(string $table, array $data): int {
+        $fields = implode(&#039;, &#039;, array_keys($data));
+        $placeholders = &#039;:&#039; . implode(&#039;, :&#039;, array_keys($data));
+        $sql = &quot;INSERT INTO {$table} ({$fields}) VALUES ({$placeholders})&quot;;
+        
+        $stmt = $this-&gt;pdo-&gt;prepare($sql);
+        $stmt-&gt;execute($data);
+        return (int)$this-&gt;pdo-&gt;lastInsertId();
+    }
+
+    public function fetchAllWhere(string $table, string $column, $value): array {
+        $sql = &quot;SELECT * FROM {$table} WHERE {$column} = :val ORDER BY id DESC&quot;;
+        $stmt = $this-&gt;pdo-&gt;prepare($sql);
+        $stmt-&gt;execute([&#039;val&#039; =&gt; $value]);
+        return $stmt-&gt;fetchAll();
+    }
+}</code></pre>
+                    </div>
+                            </div>
+        </div>
+    </div>
+</section>

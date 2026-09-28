@@ -355,14 +355,10 @@ $(document).ready(function () {
     }
 
     // --------------------------------------------------------------------------
-    // 11. AJAX Contact Form Submission
+    // 11. Contact Form Email Draft
     // --------------------------------------------------------------------------
     const $contactForm = $('#portfolio-contact-form');
     const $alertBox = $('#form-alert-container');
-    const $submitBtn = $('#btn-submit-contact');
-    const $btnSpinner = $submitBtn.find('.btn-spinner');
-    const $btnText = $submitBtn.find('.btn-text');
-    const $btnIcon = $submitBtn.find('.btn-icon');
 
     $contactForm.on('submit', function (e) {
         e.preventDefault();
@@ -373,6 +369,7 @@ $(document).ready(function () {
 
         const name = $('#contact-name').val().trim();
         const email = $('#contact-email').val().trim();
+        const subject = $('#contact-subject').val();
         const message = $('#contact-message').val().trim();
 
         let hasError = false;
@@ -395,47 +392,12 @@ $(document).ready(function () {
 
         if (hasError) return;
 
-        // UI Loading State
-        $submitBtn.prop('disabled', true);
-        $btnSpinner.show();
-        $btnIcon.hide();
-        $btnText.text('Sending...');
-
-        $.ajax({
-            url: $contactForm.attr('action'),
-            type: 'POST',
-            data: $contactForm.serialize(),
-            dataType: 'json',
-            timeout: 10000
-        })
-        .done(function (res) {
-            if (res.status === 'success') {
-                $alertBox.addClass('alert-success')
-                    .html(`<i class="fa-solid fa-circle-check"></i> ${res.message}`)
-                    .fadeIn();
-                $contactForm[0].reset();
-                showToast('Message dispatched successfully!', 'success');
-            } else {
-                $alertBox.addClass('alert-danger')
-                    .html(`<i class="fa-solid fa-circle-exclamation"></i> ${res.message || 'An error occurred.'}`)
-                    .fadeIn();
-            }
-        })
-        .fail(function (xhr) {
-            let errorMsg = 'Failed to submit form. Please check your network or try again.';
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-                errorMsg = xhr.responseJSON.message;
-            }
-            $alertBox.addClass('alert-danger')
-                .html(`<i class="fa-solid fa-triangle-exclamation"></i> ${errorMsg}`)
-                .fadeIn();
-        })
-        .always(function () {
-            $submitBtn.prop('disabled', false);
-            $btnSpinner.hide();
-            $btnIcon.show();
-            $btnText.text('Send Message');
-        });
+        const emailSubject = encodeURIComponent(`Portfolio inquiry: ${subject}`);
+        const emailBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+        $alertBox.addClass('alert-success')
+            .html('<i class="fa-solid fa-circle-check"></i> Your email app should open with this draft. Send it there to complete delivery.')
+            .fadeIn();
+        window.location.href = `mailto:rathodmohit149@gmail.com?subject=${emailSubject}&body=${emailBody}`;
     });
 
 });
