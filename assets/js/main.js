@@ -6,6 +6,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
+    // Reveal below-the-fold groups once, with one observer and no scroll-time layout reads.
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const revealTargets = document.querySelectorAll(
+            '.section:not(.hero-section) .section-header, .projects-grid, .projects-grid > *, .skills-compact-grid, .skills-compact-grid > *, .timeline-item, .about-grid > *, .contact-layout-grid > *, .code-terminal-card'
+        );
+        if (revealTargets.length) {
+            revealTargets.forEach((element) => {
+                element.classList.add('reveal-item');
+                if (element.matches('.projects-grid, .skills-compact-grid')) element.classList.add('reveal-stagger');
+            });
+            document.documentElement.classList.add('motion-ready');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+            revealTargets.forEach((element) => revealObserver.observe(element));
+        }
+    }
+
     // --------------------------------------------------------------------------
     // 0. Extract Injected Portfolio Data
     // --------------------------------------------------------------------------
