@@ -959,7 +959,7 @@ img, svg {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px;
+    padding: 10px;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
