@@ -26,13 +26,22 @@ try {
 const templatePath = path.join(root, 'index.template.html');
 const template = fs.readFileSync(templatePath, 'utf8');
 const includePattern = /<!-- include:(partials\/[\w.-]+\.html) -->/g;
+const inlinePattern = /<!-- inline:([\w./-]+) -->/g;
 const included = new Set();
 
-const html = template.replace(includePattern, function (_, relativePath) {
+let html = template.replace(includePattern, function (_, relativePath) {
     const fragmentPath = path.join(root, relativePath);
     const fragment = fs.readFileSync(fragmentPath, 'utf8');
     included.add(relativePath);
     return fragment.trim();
+}).replace(inlinePattern, function (_, relativePath) {
+    const filePath = path.join(root, relativePath);
+    if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        console.log(`Inlined ${relativePath} (${(content.length / 1024).toFixed(1)} KB) directly into index.html`);
+        return `<style id="critical-main-css">${content}</style>`;
+    }
+    return '';
 }).replace(/[ \t]+(?=\r?\n)/g, '');
 
 if (html.includes('<!-- include:')) {

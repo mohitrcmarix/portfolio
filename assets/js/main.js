@@ -72,20 +72,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeNavLink = document.querySelector('.nav-link.active');
     let scrollTicking = false;
 
+    // IntersectionObserver-based Scrollspy (Zero Forced Reflow)
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const nextLink = navLinksBySection.get(entry.target.id);
+                    if (nextLink && nextLink !== activeNavLink) {
+                        navLinks.forEach(link => link.classList.toggle('active', link === nextLink));
+                        activeNavLink = nextLink;
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        sections.forEach(sec => observer.observe(sec));
+    }
+
     window.addEventListener('scroll', () => {
         if (!scrollTicking) {
             requestAnimationFrame(() => {
                 const scrollPos = window.scrollY;
-                let nextActiveNavLink = null;
-
-                sections.forEach(sec => {
-                    const top = sec.offsetTop - 120;
-                    const bottom = top + sec.offsetHeight;
-
-                    if (scrollPos >= top && scrollPos < bottom) {
-                        nextActiveNavLink = navLinksBySection.get(sec.id) || null;
-                    }
-                });
 
                 // Sticky Header shadow
                 if (header) {
@@ -95,12 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Back to top button visibility
                 if (backToTop) {
                     backToTop.classList.toggle('visible', scrollPos > 350);
-                }
-
-                // Scrollspy active state
-                if (nextActiveNavLink && nextActiveNavLink !== activeNavLink) {
-                    navLinks.forEach(link => link.classList.toggle('active', link === nextActiveNavLink));
-                    activeNavLink = nextActiveNavLink;
                 }
 
                 scrollTicking = false;
