@@ -84,23 +84,6 @@
     --transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --- Font Display Optimization for Font Awesome --- */
-@font-face {
-    font-family: 'Font Awesome 6 Free';
-    font-style: normal;
-    font-weight: 900;
-    font-display: swap;
-    src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2") format("woff2");
-}
-
-@font-face {
-    font-family: 'Font Awesome 6 Brands';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2") format("woff2");
-}
-
 /* --- Light Mode Overrides --- */
 [data-theme="light"] {
     --bg-primary: #f8fafc;
@@ -254,6 +237,12 @@ img, svg {
 .section {
     padding: 50px 0;
     position: relative;
+}
+
+/* Defer rendering of below-the-fold sections until they approach the viewport. */
+.section:not(.hero-section) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1000px;
 }
 
 .text-center {
