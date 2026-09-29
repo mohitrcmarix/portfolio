@@ -1,9 +1,9 @@
 /**
  * Mohit Rathod - Portfolio JavaScript Engine
- * Powered by jQuery 3.7+
+ * Pure Vanilla JavaScript (Zero Dependencies, High Performance)
  */
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     // --------------------------------------------------------------------------
@@ -11,9 +11,9 @@ $(document).ready(function () {
     // --------------------------------------------------------------------------
     let portfolioData = {};
     try {
-        const rawJson = $('#portfolio-json-data').text();
-        if (rawJson) {
-            portfolioData = JSON.parse(rawJson);
+        const rawJsonEl = document.getElementById('portfolio-json-data');
+        if (rawJsonEl && rawJsonEl.textContent) {
+            portfolioData = JSON.parse(rawJsonEl.textContent);
         }
     } catch (e) {
         console.warn('Could not parse portfolio JSON:', e);
@@ -22,19 +22,19 @@ $(document).ready(function () {
     // --------------------------------------------------------------------------
     // 1. Theme Switcher (Dark / Light Mode)
     // --------------------------------------------------------------------------
-    const $html = $('html');
-    const $themeBtn = $('#theme-toggle-btn');
+    const htmlEl = document.documentElement;
+    const themeBtn = document.getElementById('theme-toggle-btn');
     const savedTheme = localStorage.getItem('mohit_portfolio_theme') || 'dark';
 
     function setTheme(theme) {
-        $html.attr('data-theme', theme);
+        htmlEl.setAttribute('data-theme', theme);
         localStorage.setItem('mohit_portfolio_theme', theme);
     }
 
     setTheme(savedTheme);
 
-    $themeBtn.on('click', function () {
-        const currentTheme = $html.attr('data-theme') || 'dark';
+    themeBtn?.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme') || 'dark';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
         showToast(`Switched to ${newTheme === 'dark' ? 'Dark' : 'Light'} Mode`);
@@ -43,92 +43,87 @@ $(document).ready(function () {
     // --------------------------------------------------------------------------
     // 2. Mobile Menu Toggle
     // --------------------------------------------------------------------------
-    const $mobileBtn = $('#mobile-menu-btn');
-    const $navMenu = $('#nav-menu');
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const navMenu = document.getElementById('nav-menu');
 
-    $mobileBtn.on('click', function () {
-        const isOpen = $navMenu.hasClass('open');
-        $navMenu.toggleClass('open');
-        $mobileBtn.attr('aria-expanded', !isOpen);
+    mobileBtn?.addEventListener('click', () => {
+        const isOpen = navMenu.classList.toggle('open');
+        mobileBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 
-    $('.nav-link').on('click', function () {
-        if ($navMenu.hasClass('open')) {
-            $navMenu.removeClass('open');
-            $mobileBtn.attr('aria-expanded', false);
-        }
-    });
-
-    // --------------------------------------------------------------------------
-    // 3. Scrollspy & Sticky Header & Back-to-Top
-    // --------------------------------------------------------------------------
-    const $header = $('#header');
-    const $backToTop = $('#back-to-top');
-    const sections = $('section[id]');
-    let scrollUpdatePending = false;
-
-    $(window).on('scroll', function () {
-        if (scrollUpdatePending) return;
-        scrollUpdatePending = true;
-
-        window.requestAnimationFrame(function () {
-            scrollUpdatePending = false;
-            const scrollPos = window.scrollY;
-
-            // Sticky Header shadow
-            if (scrollPos > 40) {
-                $header.css('box-shadow', '0 8px 24px rgba(0, 0, 0, 0.2)');
-            } else {
-                $header.css('box-shadow', 'none');
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navMenu && navMenu.classList.contains('open')) {
+                navMenu.classList.remove('open');
+                mobileBtn?.setAttribute('aria-expanded', 'false');
             }
-
-            // Back to top button visibility
-            if (scrollPos > 350) {
-                $backToTop.addClass('visible');
-            } else {
-                $backToTop.removeClass('visible');
-            }
-
-            // Scrollspy active state
-            sections.each(function () {
-                const top = $(this).offset().top - 120;
-                const bottom = top + $(this).outerHeight();
-                const id = $(this).attr('id');
-
-                if (scrollPos >= top && scrollPos < bottom) {
-                    $('.nav-link').removeClass('active');
-                    if (id === 'hero') {
-                        $('#nav-hero-link').addClass('active');
-                    } else {
-                        $(`.nav-link[href="#${id}"]`).addClass('active');
-                    }
-                }
-            });
         });
     });
 
-    $backToTop.on('click', function () {
-        $('html, body').animate({ scrollTop: 0 }, 500);
+    // --------------------------------------------------------------------------
+    // 3. Scrollspy, Sticky Header & Back-to-Top
+    // --------------------------------------------------------------------------
+    const header = document.getElementById('header');
+    const backToTop = document.getElementById('back-to-top');
+    const sections = document.querySelectorAll('section[id]');
+    let scrollTicking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!scrollTicking) {
+            requestAnimationFrame(() => {
+                const scrollPos = window.scrollY;
+
+                // Sticky Header shadow
+                if (header) {
+                    header.style.boxShadow = scrollPos > 40 ? '0 8px 24px rgba(0, 0, 0, 0.2)' : 'none';
+                }
+
+                // Back to top button visibility
+                if (backToTop) {
+                    backToTop.classList.toggle('visible', scrollPos > 350);
+                }
+
+                // Scrollspy active state
+                sections.forEach(sec => {
+                    const top = sec.offsetTop - 120;
+                    const bottom = top + sec.offsetHeight;
+                    const id = sec.id;
+
+                    if (scrollPos >= top && scrollPos < bottom) {
+                        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                        if (id === 'hero') {
+                            document.getElementById('nav-hero-link')?.classList.add('active');
+                        } else {
+                            document.querySelector(`.nav-link[href="#${id}"]`)?.classList.add('active');
+                        }
+                    }
+                });
+
+                scrollTicking = false;
+            });
+            scrollTicking = true;
+        }
+    }, { passive: true });
+
+    backToTop?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Brand logo click → scroll to top without adding #hero to URL
-    $('#brand-logo').on('click', function (e) {
+    document.getElementById('brand-logo')?.addEventListener('click', (e) => {
         e.preventDefault();
-        $('html, body').animate({ scrollTop: 0 }, 500);
-        // Remove any hash from URL cleanly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         if (window.history && window.history.replaceState) {
             window.history.replaceState(null, null, window.location.pathname);
         }
     });
 
-    $('#nav-hero-link').on('click', function (e) {
+    document.getElementById('nav-hero-link')?.addEventListener('click', (e) => {
         e.preventDefault();
-        $('html, body').stop(true, true).scrollTop(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         if (window.history && window.history.replaceState) {
             window.history.replaceState(null, null, window.location.pathname);
         }
     });
-
 
     // --------------------------------------------------------------------------
     // 4. Dynamic Typing Effect in Hero
@@ -142,23 +137,23 @@ $(document).ready(function () {
         'Staging & Live Production Fixes'
     ];
     let wordIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    const typingSpeed = 100;
-    const pauseDelay = 1800;
-    const $typedTarget = $('#typed-text');
+    let charIndex = words[0].length;
+    let isDeleting = true;
+    const typingSpeed = 90;
+    const pauseDelay = 2000;
+    const typedTarget = document.getElementById('typed-text');
 
     function typeLoop() {
-        if (!$typedTarget.length) return;
+        if (!typedTarget) return;
 
         const currentWord = words[wordIndex];
 
         if (isDeleting) {
-            $typedTarget.text(currentWord.substring(0, charIndex - 1));
             charIndex--;
+            typedTarget.textContent = currentWord.substring(0, charIndex);
         } else {
-            $typedTarget.text(currentWord.substring(0, charIndex + 1));
             charIndex++;
+            typedTarget.textContent = currentWord.substring(0, charIndex);
         }
 
         let currentSpeed = isDeleting ? typingSpeed / 2 : typingSpeed;
@@ -169,230 +164,250 @@ $(document).ready(function () {
         } else if (isDeleting && charIndex === 0) {
             isDeleting = false;
             wordIndex = (wordIndex + 1) % words.length;
-            currentSpeed = 400;
+            currentSpeed = 350;
         }
 
         setTimeout(typeLoop, currentSpeed);
     }
 
-    typeLoop();
+    // Start typing cycle after initial pause on pre-filled text
+    setTimeout(typeLoop, pauseDelay);
 
     // --------------------------------------------------------------------------
     // 5. Project Filtering
     // --------------------------------------------------------------------------
-    $('.filter-btn').on('click', function () {
-        const filter = $(this).data('filter');
-        $('.filter-btn').removeClass('active');
-        $(this).addClass('active');
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-        const $cards = $('.project-card');
-
-        if (filter === 'all') {
-            $cards.stop(true, true).fadeIn(300);
-        } else {
-            $cards.each(function () {
-                const category = $(this).data('category');
-                if (category === filter) {
-                    $(this).stop(true, true).fadeIn(300);
+            document.querySelectorAll('.project-card').forEach(card => {
+                const category = card.dataset.category;
+                if (filter === 'all' || category === filter) {
+                    card.style.display = 'flex';
                 } else {
-                    $(this).stop(true, true).fadeOut(200);
+                    card.style.display = 'none';
                 }
             });
-        }
+        });
     });
 
     // --------------------------------------------------------------------------
-    // 6. Project Case Study Modal
+    // 6. Project Case Study Modal & Resume Modal
     // --------------------------------------------------------------------------
-    const $projectModal = $('#project-modal');
+    const projectModal = document.getElementById('project-modal');
+    const resumeModal = document.getElementById('resume-modal');
 
-    $(document).on('click', '.btn-view-project', function (e) {
-        e.preventDefault();
-        const projectId = $(this).data('project-id');
-        const projectsList = portfolioData.projects || [];
-        const project = projectsList.find(p => p.id === projectId);
-
-        if (!project) return;
-
-        $('#modal-project-title').text(project.title);
-        $('#modal-project-badge').text(project.badge || 'Case Study');
-        $('#modal-project-cat').text(project.category_label || '');
-        $('#modal-project-desc').text(project.description || project.summary);
-
-        // URL handling
-        if (project.url && project.url !== '#') {
-            $('#modal-project-url').html(`<a href="${project.url}" target="_blank" rel="noopener noreferrer">${project.url_display || project.url} <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`);
-            $('#modal-external-link').attr('href', project.url).show();
-        } else {
-            $('#modal-project-url').text(project.url_display || 'Enterprise Custom Implementation');
-            $('#modal-external-link').hide();
-        }
-
-        // Achievements list
-        const $achieveList = $('#modal-project-achievements').empty();
-        if (project.achievements && project.achievements.length) {
-            project.achievements.forEach(item => {
-                $achieveList.append(`<li>${item}</li>`);
-            });
-        }
-
-        // Stack chips
-        const $stackWrap = $('#modal-project-stack').empty();
-        if (project.stack && project.stack.length) {
-            project.stack.forEach(tech => {
-                $stackWrap.append(`<span class="stack-badge">${tech}</span>`);
-            });
-        }
-
-        openModal($projectModal);
-    });
-
-    // --------------------------------------------------------------------------
-    // 7. Full Resume Modal & Print Action
-    // --------------------------------------------------------------------------
-    const $resumeModal = $('#resume-modal');
-
-    $('#btn-open-resume-modal').on('click', function () {
-        openModal($resumeModal);
-    });
-
-    $('#btn-print-resume').on('click', function () {
-        window.print();
-    });
-
-    // --------------------------------------------------------------------------
-    // Modal Helpers (Close button & backdrop click)
-    // --------------------------------------------------------------------------
-    function openModal($m) {
-        $m.addClass('open').attr('aria-hidden', 'false');
-        $('body').css('overflow', 'hidden');
+    function openModal(modal) {
+        if (!modal) return;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
     }
 
-    function closeModal($m) {
-        $m.removeClass('open').attr('aria-hidden', 'true');
-        $('body').css('overflow', '');
+    function closeModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
     }
 
-    $('.modal-close-btn, .modal-close-action, #resume-modal-close-btn, #resume-modal-close-action').on('click', function () {
-        closeModal($(this).closest('.modal-overlay'));
-    });
+    document.addEventListener('click', (e) => {
+        // View project button
+        const viewBtn = e.target.closest('.btn-view-project');
+        if (viewBtn) {
+            e.preventDefault();
+            const projectId = viewBtn.dataset.projectId;
+            const projectsList = portfolioData.projects || [];
+            const project = projectsList.find(p => p.id === projectId);
 
-    $('.modal-overlay').on('click', function (e) {
-        if ($(e.target).hasClass('modal-overlay')) {
-            closeModal($(this));
+            if (!project) return;
+
+            const titleEl = document.getElementById('modal-project-title');
+            const badgeEl = document.getElementById('modal-project-badge');
+            const catEl = document.getElementById('modal-project-cat');
+            const descEl = document.getElementById('modal-project-desc');
+            const urlEl = document.getElementById('modal-project-url');
+            const extLinkEl = document.getElementById('modal-external-link');
+            const achieveList = document.getElementById('modal-project-achievements');
+            const stackWrap = document.getElementById('modal-project-stack');
+
+            if (titleEl) titleEl.textContent = project.title || '';
+            if (badgeEl) badgeEl.textContent = project.badge || 'Case Study';
+            if (catEl) catEl.textContent = project.category_label || '';
+            if (descEl) descEl.textContent = project.description || project.summary || '';
+
+            if (urlEl) {
+                if (project.url && project.url !== '#') {
+                    urlEl.innerHTML = `<a href="${project.url}" target="_blank" rel="noopener noreferrer">${project.url_display || project.url} <i class="fa-solid fa-arrow-up-right-from-square"></i></a>`;
+                    if (extLinkEl) {
+                        extLinkEl.href = project.url;
+                        extLinkEl.style.display = 'inline-flex';
+                    }
+                } else {
+                    urlEl.textContent = project.url_display || 'Enterprise Custom Implementation';
+                    if (extLinkEl) extLinkEl.style.display = 'none';
+                }
+            }
+
+            if (achieveList) {
+                achieveList.innerHTML = '';
+                (project.achievements || []).forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    achieveList.appendChild(li);
+                });
+            }
+
+            if (stackWrap) {
+                stackWrap.innerHTML = '';
+                (project.stack || []).forEach(tech => {
+                    const span = document.createElement('span');
+                    span.className = 'stack-badge';
+                    span.textContent = tech;
+                    stackWrap.appendChild(span);
+                });
+            }
+
+            openModal(projectModal);
+            return;
+        }
+
+        // Open resume modal
+        if (e.target.closest('#btn-open-resume-modal')) {
+            openModal(resumeModal);
+            return;
+        }
+
+        // Print resume
+        if (e.target.closest('#btn-print-resume')) {
+            window.print();
+            return;
+        }
+
+        // Modal close buttons
+        if (e.target.closest('.modal-close-btn') || e.target.closest('.modal-close-action') || e.target.closest('#resume-modal-close-btn') || e.target.closest('#resume-modal-close-action')) {
+            closeModal(e.target.closest('.modal-overlay'));
+            return;
+        }
+
+        // Modal backdrop click
+        if (e.target.classList.contains('modal-overlay')) {
+            closeModal(e.target);
+            return;
+        }
+
+        // Quick Copy buttons
+        const copyBtn = e.target.closest('.copy-btn');
+        if (copyBtn) {
+            const textToCopy = copyBtn.dataset.copy;
+            if (textToCopy) {
+                copyText(textToCopy, `Copied: ${textToCopy}`);
+            }
         }
     });
 
-    $(document).on('keydown', function (e) {
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            closeModal($('.modal-overlay.open'));
+            closeModal(document.querySelector('.modal-overlay.open'));
         }
     });
 
     // --------------------------------------------------------------------------
-    // 8. Developer Code Lab Tabs & Copy
+    // 7. Developer Code Lab Tabs & Copy
     // --------------------------------------------------------------------------
-    $('.code-tab-btn').on('click', function () {
-        const targetId = $(this).data('target');
-        $('.code-tab-btn').removeClass('active');
-        $(this).addClass('active');
+    document.querySelectorAll('.code-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.dataset.target;
+            document.querySelectorAll('.code-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-        $('.code-snippet-panel').removeClass('active');
-        $('#' + targetId).addClass('active');
+            document.querySelectorAll('.code-snippet-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(targetId)?.classList.add('active');
+        });
     });
 
-    $('#btn-copy-active-code').on('click', function () {
-        const activeCode = $('.code-snippet-panel.active code').text();
+    document.getElementById('btn-copy-active-code')?.addEventListener('click', () => {
+        const activeCode = document.querySelector('.code-snippet-panel.active code')?.textContent || '';
+        copyText(activeCode, 'Code snippet copied to clipboard!');
+    });
+
+    function copyText(text, msg) {
         if (navigator.clipboard) {
-            navigator.clipboard.writeText(activeCode).then(function () {
-                showToast('Code snippet copied to clipboard!');
-            });
+            navigator.clipboard.writeText(text).then(() => showToast(msg));
         } else {
-            copyFallback(activeCode);
-            showToast('Code snippet copied to clipboard!');
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast(msg);
         }
-    });
-
-    // --------------------------------------------------------------------------
-    // 9. Quick Copy Helper Buttons
-    // --------------------------------------------------------------------------
-    $(document).on('click', '.copy-btn', function () {
-        const textToCopy = $(this).data('copy');
-        if (!textToCopy) return;
-
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(textToCopy).then(function () {
-                showToast(`Copied: ${textToCopy}`);
-            });
-        } else {
-            copyFallback(textToCopy);
-            showToast(`Copied: ${textToCopy}`);
-        }
-    });
-
-    function copyFallback(text) {
-        const $temp = $('<textarea>');
-        $('body').append($temp);
-        $temp.val(text).select();
-        document.execCommand('copy');
-        $temp.remove();
     }
 
     // --------------------------------------------------------------------------
-    // 10. Toast Notification System
+    // 8. Toast Notification System
     // --------------------------------------------------------------------------
     function showToast(message, type = 'success') {
-        const $container = $('#toast-container');
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
         const iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation';
-        const $toast = $(`
-            <div class="toast toast-${type}">
-                <i class="fa-solid ${iconClass}"></i>
-                <span>${message}</span>
-            </div>
-        `);
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `<i class="fa-solid ${iconClass}"></i><span>${message}</span>`;
+        container.appendChild(toast);
 
-        $container.append($toast);
-
-        setTimeout(function () {
-            $toast.fadeOut(300, function () {
-                $(this).remove();
-            });
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
         }, 3500);
     }
 
     // --------------------------------------------------------------------------
-    // 11. Contact Form Email Draft
+    // 9. Contact Form Email Draft
     // --------------------------------------------------------------------------
-    const $contactForm = $('#portfolio-contact-form');
-    const $alertBox = $('#form-alert-container');
+    const contactForm = document.getElementById('portfolio-contact-form');
+    const alertBox = document.getElementById('form-alert-container');
 
-    $contactForm.on('submit', function (e) {
+    contactForm?.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Clear previous errors
-        $('.field-error').text('');
-        $alertBox.hide().removeClass('alert-success alert-danger').empty();
+        document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+        if (alertBox) {
+            alertBox.style.display = 'none';
+            alertBox.className = 'form-alert-box';
+            alertBox.innerHTML = '';
+        }
 
-        const name = $('#contact-name').val().trim();
-        const email = $('#contact-email').val().trim();
-        const subject = $('#contact-subject').val();
-        const message = $('#contact-message').val().trim();
+        const name = (document.getElementById('contact-name')?.value || '').trim();
+        const email = (document.getElementById('contact-email')?.value || '').trim();
+        const subject = document.getElementById('contact-subject')?.value || '';
+        const message = (document.getElementById('contact-message')?.value || '').trim();
 
         let hasError = false;
 
         if (name.length < 2) {
-            $('#name-error').text('Please enter your full name (minimum 2 characters).');
+            const err = document.getElementById('name-error');
+            if (err) err.textContent = 'Please enter your full name (minimum 2 characters).';
             hasError = true;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            $('#email-error').text('Please enter a valid email address.');
+            const err = document.getElementById('email-error');
+            if (err) err.textContent = 'Please enter a valid email address.';
             hasError = true;
         }
 
         if (message.length < 10) {
-            $('#message-error').text('Please provide a message with at least 10 characters.');
+            const err = document.getElementById('message-error');
+            if (err) err.textContent = 'Please provide a message with at least 10 characters.';
             hasError = true;
         }
 
@@ -400,10 +415,13 @@ $(document).ready(function () {
 
         const emailSubject = encodeURIComponent(`Portfolio inquiry: ${subject}`);
         const emailBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-        $alertBox.addClass('alert-success')
-            .html('<i class="fa-solid fa-circle-check"></i> Your email app should open with this draft. Send it there to complete delivery.')
-            .fadeIn();
+
+        if (alertBox) {
+            alertBox.className = 'form-alert-box alert-success';
+            alertBox.innerHTML = '<i class="fa-solid fa-circle-check"></i> Your email app should open with this draft. Send it there to complete delivery.';
+            alertBox.style.display = 'flex';
+        }
+
         window.location.href = `mailto:rathodmohit149@gmail.com?subject=${emailSubject}&body=${emailBody}`;
     });
-
 });

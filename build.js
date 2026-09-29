@@ -2,6 +2,27 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = __dirname;
+
+// 1. Minify CSS
+try {
+    const cssPath = path.join(root, 'assets', 'css', 'style.css');
+    const minCssPath = path.join(root, 'assets', 'css', 'style.min.css');
+    if (fs.existsSync(cssPath)) {
+        const rawCss = fs.readFileSync(cssPath, 'utf8');
+        const minCss = rawCss
+            .replace(/\/\*[\s\S]*?\*\//g, '')
+            .replace(/\s+/g, ' ')
+            .replace(/\s*([\{\};:,>~+])\s*/g, '$1')
+            .replace(/;}/g, '}')
+            .trim();
+        fs.writeFileSync(minCssPath, minCss);
+        console.log(`Minified CSS: ${(rawCss.length / 1024).toFixed(1)} KB -> ${(minCss.length / 1024).toFixed(1)} KB`);
+    }
+} catch (err) {
+    console.warn('Could not minify CSS:', err);
+}
+
+// 2. Build index.html from template & partials
 const templatePath = path.join(root, 'index.template.html');
 const template = fs.readFileSync(templatePath, 'utf8');
 const includePattern = /<!-- include:(partials\/[\w.-]+\.html) -->/g;
