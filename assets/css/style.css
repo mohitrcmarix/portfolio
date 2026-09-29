@@ -649,16 +649,21 @@ img, svg {
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -1px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    contain: layout;
 }
 
 .hero-role-wrapper {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
     font-size: 1.85rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin-top: 8px;
-    min-height: 2.4em;
+    margin-bottom: 24px;
+    min-height: 2.2em;
+    contain: layout;
 }
 
 .hero-static-prefix {
@@ -2510,11 +2515,13 @@ img, svg {
 
     .hero-title {
         font-size: 2.2rem;
+        margin-bottom: 8px;
     }
 
     .hero-role-wrapper {
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         min-height: 2.8em;
+        margin-bottom: 20px;
     }
 
     .hero-stats-banner {
