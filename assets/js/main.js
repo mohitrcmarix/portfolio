@@ -66,12 +66,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.getElementById('header');
     const backToTop = document.getElementById('back-to-top');
     const sections = document.querySelectorAll('section[id]');
+    const navLinks = [...document.querySelectorAll('.nav-link')];
+    const navLinksBySection = new Map(navLinks.map(link => [link.hash.slice(1), link]));
+    navLinksBySection.set('hero', document.getElementById('nav-hero-link'));
+    let activeNavLink = document.querySelector('.nav-link.active');
     let scrollTicking = false;
 
     window.addEventListener('scroll', () => {
         if (!scrollTicking) {
             requestAnimationFrame(() => {
                 const scrollPos = window.scrollY;
+                let nextActiveNavLink = null;
+
+                sections.forEach(sec => {
+                    const top = sec.offsetTop - 120;
+                    const bottom = top + sec.offsetHeight;
+
+                    if (scrollPos >= top && scrollPos < bottom) {
+                        nextActiveNavLink = navLinksBySection.get(sec.id) || null;
+                    }
+                });
 
                 // Sticky Header shadow
                 if (header) {
@@ -84,20 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Scrollspy active state
-                sections.forEach(sec => {
-                    const top = sec.offsetTop - 120;
-                    const bottom = top + sec.offsetHeight;
-                    const id = sec.id;
-
-                    if (scrollPos >= top && scrollPos < bottom) {
-                        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                        if (id === 'hero') {
-                            document.getElementById('nav-hero-link')?.classList.add('active');
-                        } else {
-                            document.querySelector(`.nav-link[href="#${id}"]`)?.classList.add('active');
-                        }
-                    }
-                });
+                if (nextActiveNavLink && nextActiveNavLink !== activeNavLink) {
+                    navLinks.forEach(link => link.classList.toggle('active', link === nextActiveNavLink));
+                    activeNavLink = nextActiveNavLink;
+                }
 
                 scrollTicking = false;
             });
