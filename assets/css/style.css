@@ -2466,11 +2466,6 @@ img, svg {
 }
 
 @media (max-width: 768px) {
-    :root {
-        --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-    }
-
     .section {
         padding: 40px 0;
     }
