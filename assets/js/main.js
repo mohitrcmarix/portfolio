@@ -131,54 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --------------------------------------------------------------------------
-    // 4. Dynamic Typing Effect in Hero
-    // --------------------------------------------------------------------------
-    const words = [
-        'Custom WordPress Themes',
-        'Core PHP & OOP Solutions',
-        'Custom WordPress Plugins',
-        'WooCommerce & Razorpay Gateways',
-        '90+ Speed & Core Web Vitals',
-        'Staging & Live Production Fixes'
-    ];
-    let wordIndex = 0;
-    let charIndex = words[0].length;
-    let isDeleting = true;
-    const typingSpeed = 90;
-    const pauseDelay = 2000;
-    const typedTarget = document.getElementById('typed-text');
-
-    function typeLoop() {
-        if (!typedTarget) return;
-
-        const currentWord = words[wordIndex];
-
-        if (isDeleting) {
-            charIndex--;
-            typedTarget.textContent = currentWord.substring(0, charIndex);
-        } else {
-            charIndex++;
-            typedTarget.textContent = currentWord.substring(0, charIndex);
-        }
-
-        let currentSpeed = isDeleting ? typingSpeed / 2 : typingSpeed;
-
-        if (!isDeleting && charIndex === currentWord.length) {
-            currentSpeed = pauseDelay;
-            isDeleting = true;
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            wordIndex = (wordIndex + 1) % words.length;
-            currentSpeed = 350;
-        }
-
-        setTimeout(typeLoop, currentSpeed);
-    }
-
-    // Start typing cycle after initial pause on pre-filled text
-    setTimeout(typeLoop, pauseDelay);
-
-    // --------------------------------------------------------------------------
     // 5. Project Filtering
     // --------------------------------------------------------------------------
     document.querySelectorAll('.filter-btn').forEach(btn => {
