@@ -29,11 +29,12 @@
     <meta name="twitter:description" content="Official portfolio of Mohit Rathod, a WordPress Developer and Web Developer, featuring WordPress development projects, skills, and professional experience.">
     <meta name="twitter:image" content="https://mohitrcmarix.github.io/portfolio/assets/images/mohit-rathod-portfolio.png">
 
-    <!-- Google Fonts: Preconnect & Asynchronous Loading (Zero Render-Blocking) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" media="(min-width: 769px)">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" media="print" onload="if (matchMedia('(min-width: 769px)').matches) this.media='all'">
+    <!-- Load display fonts only on desktop; mobile uses the system font stack. -->
+    <script>
+        if (matchMedia('(min-width: 769px)').matches) {
+            document.write('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel=\'stylesheet\'">');
+        }
+    </script>
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" media="(min-width: 769px)">
     </noscript>
