@@ -2485,3 +2485,43 @@ img, svg {
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 360px) {
+    .hero-stats-banner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat-item,
+    .stat-info {
+        min-width: 0;
+    }
+
+    .stat-item {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .stat-label {
+        overflow-wrap: anywhere;
+    }
+
+    .bio-meta-list .meta-item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .bio-meta-list .meta-val {
+        overflow-wrap: anywhere;
+        text-align: left;
+    }
+
+    .timeline-item {
+        gap: 16px;
+    }
+
+    .timeline-content {
+        min-width: 0;
+        padding: 20px;
+    }
+}
